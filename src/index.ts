@@ -23,9 +23,7 @@ function DomSQL(): DomSQL {
 			return this;
 		},
 		where: function (condition) {
-			privateState.elements = privateState.elements.filter(
-				element => element instanceof HTMLElement && condition(element)
-			);
+			privateState.elements = privateState.elements.filter(element => condition(element));
 
 			return this;
 		},
@@ -35,9 +33,7 @@ function DomSQL(): DomSQL {
 			return this;
 		},
 		remove: function () {
-			privateState.elements.forEach(
-				element => (console.log(element), element.parentNode?.removeChild(element))
-			);
+			privateState.elements.forEach(element => element.parentNode?.removeChild(element));
 
 			return this;
 		},
