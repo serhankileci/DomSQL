@@ -1,0 +1,43 @@
+{
+	"name": "domsql",
+	"version": "0.1.1",
+	"homepage": "https://github.com/serhankileci/DomSQL",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/serhankileci/DomSQL.git"
+	},
+	"author": "Serhan Kileci <serhanselimkileci@gmail.com>",
+	"keywords": [
+		"dom",
+		"sql"
+	],
+	"description": "DOM manipulation library with SQL-like syntax.",
+	"main": "./build/index.js",
+	"license": "MIT",
+	"type": "module",
+	"files": [
+		"build",
+		"src"
+	],
+	"types": "./build/index.d.ts",
+	"bugs": {
+		"url": "https://github.com/serhankileci/DomSQL/issues"
+	},
+	"directories": {
+		"doc": "docs"
+	},
+	"scripts": {
+		"lint-format": "cross-env eslint . --ext .js,.ts && prettier --check src/**/*.ts || prettier --write src/**/*.ts",
+		"dev": "cross-env nodemon --watch ./src/*.ts --exec 'npm run build'",
+		"build": "cross-env tsc -p ."
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.51.0",
+		"@typescript-eslint/parser": "^5.51.0",
+		"cross-env": "^7.0.3",
+		"eslint": "^8.33.0",
+		"nodemon": "^3.0.1",
+		"prettier": "^2.8.4",
+		"typescript": "^5.1.6"
+	}
+}
