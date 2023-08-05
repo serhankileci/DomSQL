@@ -2,7 +2,7 @@ interface DomSQL {
 	readonly elements: Readonly<HTMLElement[]>;
 	select: (selector: string) => DomSQL;
 	where: (condition: (element: HTMLElement) => boolean) => DomSQL;
-	update: (cb: (properties: HTMLElement) => void) => DomSQL;
+	update: (cb: (element: HTMLElement) => void) => DomSQL;
 	remove: () => DomSQL;
 	clear: () => DomSQL;
 	order: (compare: (a: HTMLElement, b: HTMLElement) => number) => DomSQL;
