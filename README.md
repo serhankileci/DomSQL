@@ -10,36 +10,20 @@ Manipulate the DOM with SQL-like syntax. Work in progress, subject to breaking c
 ```js
 import DomSQL from "domsql";
 
-const divsWithFooClass = DomSQL()
-    .select("div")
-    .where(el => el.classList.contains("foo"))
-    .limit(5)
-    .offset(10)
+const paragraphElem = DomSQL()
+    .select("p")
+    .where(el => el.classList.contains("foo") && el.textContent!.length > 3)
+    .order((a, b) => a.textContent!.localeCompare(b.textContent!))
+    .limit(2)
+    .offset(2)
     .update(el => el.classList.add("bar"));
 
-// get list of elements that matched the query
-const matchedElems = divsWithFooClass.elements;
+// list of elements that matched the query
+const matchedElems = paragraphElem.elements();
 
-// remove elements from the DOM that matched the divsWithFooClass query
-divsWithFooClass.remove();
+// empty the paragraphElem query's matched elements list
+paragraphElem.clear();
 
-// empty the divsWithFooClass query's elements list
-divsWithFooClass.clear();
-
-const textElems = DomSQL()
-    .select("p")
-    .where(el => {
-        if (!el.textContent) return false;
-        return el.textContent.length > 0;
-    })
-    .order((a, b) => {
-        if (!a.textContent || !b.textContent) return 0;
-        return a.textContent.localeCompare(b.textContent);
-    })
-    .limit(5)
-    .offset(10)
-    .update(el => {
-        el.textContent = "foobar";
-        el.style.color = "red";
-    });
+// remove elements from the DOM that matched the paragraphElem query
+paragraphElem.remove();
 ```
