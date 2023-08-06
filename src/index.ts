@@ -1,5 +1,5 @@
 interface DomSQL {
-	readonly elements: Readonly<HTMLElement[]>;
+	readonly elements: () => Readonly<HTMLElement[]>;
 	select: (selector: string) => DomSQL;
 	where: (condition: (element: HTMLElement) => boolean) => DomSQL;
 	update: (cb: (element: HTMLElement) => void) => DomSQL;
@@ -11,50 +11,57 @@ interface DomSQL {
 }
 
 function DomSQL(): DomSQL {
-	const privateState: { elements: HTMLElement[] } = { elements: [] };
+	const privateState: {
+		elements: HTMLElement[];
+		limitCount: number;
+		offsetCount: number;
+	} = {
+		elements: [],
+		limitCount: Infinity,
+		offsetCount: 0,
+	};
 
 	const state: DomSQL = {
-		get elements() {
+		elements: function () {
 			return privateState.elements;
 		},
 		select: function (selector) {
 			privateState.elements = Array.from(document.querySelectorAll(selector));
-
 			return this;
 		},
 		where: function (condition) {
 			privateState.elements = privateState.elements.filter(element => condition(element));
-
 			return this;
 		},
 		update: function (cb) {
-			privateState.elements.forEach(element => cb(element));
+			const { limitCount, offsetCount } = privateState;
 
+			privateState.elements = privateState.elements.slice(
+				offsetCount,
+				offsetCount + limitCount
+			);
+
+			privateState.elements.forEach(element => cb(element));
 			return this;
 		},
 		remove: function () {
 			privateState.elements.forEach(element => element.parentNode?.removeChild(element));
-
 			return this;
 		},
 		clear: function () {
 			privateState.elements = [];
-
 			return this;
 		},
 		order: function (compare) {
 			privateState.elements.sort(compare);
-
 			return this;
 		},
 		limit: function (count) {
-			privateState.elements = privateState.elements.slice(0, count + 1);
-
+			privateState.limitCount = count;
 			return this;
 		},
 		offset: function (count) {
-			privateState.elements = privateState.elements.slice(count);
-
+			privateState.offsetCount = count;
 			return this;
 		},
 	};
