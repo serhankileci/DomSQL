@@ -1,3 +1,8 @@
+![](https://img.shields.io/npm/v/domsql?style=for-the-badge)
+![](https://img.shields.io/npm/dt/domsql?style=for-the-badge)
+![](https://img.shields.io/github/last-commit/serhankileci/domsql?style=for-the-badge)
+![](https://img.shields.io/github/license/serhankileci/domsql?style=for-the-badge)
+
 # DomSQL
 Manipulate the DOM with SQL-like syntax. Work in progress, subject to breaking changes.
 
