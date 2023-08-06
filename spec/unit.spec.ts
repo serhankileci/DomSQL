@@ -83,4 +83,25 @@ describe("Testing DomSQL query methods.", () => {
 		expect(selectedElements[0].dataset.value).toBe("2");
 		expect(selectedElements[1].dataset.value).toBe("3");
 	});
+
+	test("Private 'rehydrateElements' function matches correct length of elements.", () => {
+		document.body.innerHTML = `
+			<p>foo</p>
+			<p>bar</p>
+			<p>baz</p>
+			<p>hello</p>
+			<p>world</p>
+    	`;
+
+		const pElems = DomSQL().select("p");
+
+		expect(pElems.elements().length).toStrictEqual(5);
+		expect(
+			pElems
+				.limit(2)
+				.offset(2)
+				.update(el => (el.textContent = ":D"))
+				.elements().length
+		).toStrictEqual(2);
+	});
 });
