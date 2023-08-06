@@ -46,7 +46,6 @@ function DomSQL(): DomSQL {
 			return this;
 		},
 		update: function (cb) {
-			privateState.rehydrateElements();
 			privateState.elements.forEach(element => cb(element));
 			return this;
 		},
