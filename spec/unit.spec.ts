@@ -84,7 +84,7 @@ describe("Testing DomSQL query methods.", () => {
 		expect(selectedElements[1].dataset.value).toBe("3");
 	});
 
-	test("Private 'rehydrateElements' function matches correct length of elements.", () => {
+	test("Calling the 'elements' method multiple times should only affect the elements list once.", () => {
 		document.body.innerHTML = `
 			<p>foo</p>
 			<p>bar</p>
@@ -94,14 +94,16 @@ describe("Testing DomSQL query methods.", () => {
     	`;
 
 		const pElems = DomSQL().select("p");
-
 		expect(pElems.elements().length).toStrictEqual(5);
-		expect(
-			pElems
-				.limit(2)
-				.offset(2)
-				.update(el => (el.textContent = ":D"))
-				.elements().length
-		).toStrictEqual(2);
+
+		const updatedElems = pElems
+			.limit(2)
+			.offset(2)
+			.update(el => (el.textContent = ":D"));
+
+		expect(updatedElems.elements()[0].textContent!).toStrictEqual(":D");
+		expect(updatedElems.elements()[1].textContent!).toStrictEqual(":D");
+		expect(updatedElems.elements().length).toStrictEqual(2);
+		expect(updatedElems.elements().length).toBe(updatedElems.elements().length);
 	});
 });
