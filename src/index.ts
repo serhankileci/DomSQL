@@ -15,14 +15,26 @@ function DomSQL(): DomSQL {
 		elements: HTMLElement[];
 		limitCount: number;
 		offsetCount: number;
+		rehydrateElements: () => void;
 	} = {
 		elements: [],
 		limitCount: Infinity,
 		offsetCount: 0,
+		rehydrateElements: () => {
+			if (privateState.limitCount || privateState.offsetCount) {
+				const { limitCount, offsetCount } = privateState;
+
+				privateState.elements = privateState.elements.slice(
+					offsetCount,
+					offsetCount + limitCount
+				);
+			}
+		},
 	};
 
 	const state: DomSQL = {
 		elements: function () {
+			privateState.rehydrateElements();
 			return privateState.elements;
 		},
 		select: function (selector) {
@@ -34,13 +46,7 @@ function DomSQL(): DomSQL {
 			return this;
 		},
 		update: function (cb) {
-			const { limitCount, offsetCount } = privateState;
-
-			privateState.elements = privateState.elements.slice(
-				offsetCount,
-				offsetCount + limitCount
-			);
-
+			privateState.rehydrateElements();
 			privateState.elements.forEach(element => cb(element));
 			return this;
 		},
