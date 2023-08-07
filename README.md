@@ -6,6 +6,11 @@
 # DomSQL
 Manipulate the DOM with SQL-like syntax in JavaScript.
 
+## **Installation**
+```
+npm install domsql
+```
+
 ## Example
 ```js
 import DomSQL from "domsql";
