@@ -17,11 +17,11 @@ import DomSQL from "domsql";
 
 const paragraphElem = DomSQL()
     .select("p")
-    .where(el => el.classList.contains("foo") && el.textContent!.length > 3)
+    .where(element => element.classList.contains("foo") && element.textContent!.length > 3)
     .order((a, b) => a.textContent!.localeCompare(b.textContent!))
     .limit(2)
     .offset(2)
-    .update(el => el.classList.add("bar"));
+    .update(element => element.classList.add("bar"));
 
 // list of elements that matched the query
 const matchedElems = paragraphElem.elements();
