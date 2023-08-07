@@ -53,7 +53,7 @@ describe("Testing DomSQL query methods.", () => {
 	test("'Clear' method to clear matched HTML elements list.", () => {
 		const dom = DomSQL();
 		dom.select(".item").clear();
-		const selectedElements = dom.elements();
+		const selectedElements = (dom as any).elements();
 		expect(selectedElements.length).toBe(0);
 	});
 
