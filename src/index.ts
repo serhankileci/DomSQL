@@ -23,75 +23,94 @@ interface DomSQL {
 function DomSQL(): { select: DomSQL["select"] } {
 	const privateState: {
 		elements: HTMLElement[];
-		limitCount: number;
-		offsetCount: number;
-		rehydrateElements: () => void;
-		wasRehydratedToggle: boolean;
+		limitCount?: number;
+		offsetCount?: number;
+		isReloaded: boolean;
+		shouldReload: () => boolean;
+		reload: () => void;
 	} = {
 		elements: [],
-		limitCount: Infinity,
-		offsetCount: 0,
-		wasRehydratedToggle: false,
-		rehydrateElements: () => {
-			if (
-				!privateState.wasRehydratedToggle &&
-				(privateState.limitCount || privateState.offsetCount)
-			) {
-				const { limitCount, offsetCount } = privateState;
+		limitCount: undefined,
+		offsetCount: undefined,
+		isReloaded: false,
+		shouldReload: function () {
+			return (
+				!privateState.isReloaded &&
+				(Boolean(privateState.limitCount) || Boolean(privateState.offsetCount))
+			);
+		},
+		reload: function () {
+			const { limitCount = 0, offsetCount = 0 } = privateState;
+			let sliceArgs;
 
-				privateState.elements = privateState.elements.slice(
-					offsetCount,
-					offsetCount + limitCount
-				);
-
-				privateState.wasRehydratedToggle = true;
+			if (limitCount && offsetCount) {
+				sliceArgs = [offsetCount, offsetCount + limitCount];
+			} else if (limitCount && !offsetCount) {
+				sliceArgs = [0, limitCount];
+			} else if (!limitCount && offsetCount) {
+				sliceArgs = offsetCount;
 			}
+
+			privateState.elements = privateState.elements.slice(
+				...(Array.isArray(sliceArgs) ? sliceArgs : [sliceArgs])
+			);
+
+			privateState.limitCount = 0;
+			privateState.offsetCount = 0;
+			privateState.isReloaded = true;
 		},
 	};
 
 	const state: DomSQL = {
 		elements: function () {
-			privateState.rehydrateElements();
+			if (privateState.shouldReload()) {
+				privateState.reload();
+			}
+
 			return privateState.elements;
+		},
+		order: function (compare) {
+			privateState.elements.sort(compare);
+			privateState.isReloaded = false;
+			return this;
 		},
 		select: function (selector) {
 			privateState.elements = Array.from(document.querySelectorAll(selector));
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 		where: function (condition) {
 			privateState.elements = privateState.elements.filter(element => condition(element));
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 		update: function (cb) {
+			if (privateState.shouldReload()) {
+				privateState.reload();
+			}
+
 			privateState.elements.forEach(element => cb(element));
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 		remove: function () {
 			privateState.elements.forEach(element => element.parentNode?.removeChild(element));
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 		clear: function () {
 			privateState.elements = [];
-			privateState.wasRehydratedToggle = false;
-			return this;
-		},
-		order: function (compare) {
-			privateState.elements.sort(compare);
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 		limit: function (count) {
 			privateState.limitCount = count;
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 		offset: function (count) {
 			privateState.offsetCount = count;
-			privateState.wasRehydratedToggle = false;
+			privateState.isReloaded = false;
 			return this;
 		},
 	};
