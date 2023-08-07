@@ -1,16 +1,26 @@
+type Except<T, K extends keyof T> = K extends keyof T ? Omit<T, K> : never;
+type ExceptSelect = Except<DomSQL, "select">;
+type ExceptWhere = Except<DomSQL, "select" | "where">;
+type ExceptOrder = Except<DomSQL, "select" | "where" | "order">;
+type ExceptLimit = Except<DomSQL, "select" | "where" | "order" | "limit">;
+type ExceptOffset = Except<DomSQL, "select" | "where" | "order" | "limit" | "offset">;
+type ExceptUpdate = Except<DomSQL, "select" | "where" | "order" | "limit" | "offset" | "update">;
+type ExceptClear = Except<DomSQL, "clear">;
+type ExceptRemove = Except<DomSQL, "remove">;
+
 interface DomSQL {
-	select: (selector: string) => DomSQL;
-	where: (condition: (element: HTMLElement) => boolean) => DomSQL;
-	update: (cb: (element: HTMLElement) => void) => DomSQL;
-	remove: () => DomSQL;
-	clear: () => DomSQL;
-	order: (compare: (a: HTMLElement, b: HTMLElement) => number) => DomSQL;
-	limit: (count: number) => DomSQL;
-	offset: (count: number) => DomSQL;
+	select: (selector: string) => ExceptSelect;
+	where: (condition: (element: HTMLElement) => boolean) => ExceptWhere;
+	order: (compare: (a: HTMLElement, b: HTMLElement) => number) => ExceptOrder;
+	limit: (count: number) => ExceptLimit;
+	offset: (count: number) => ExceptOffset;
+	update: (cb: (element: HTMLElement) => void) => ExceptUpdate;
+	clear: () => ExceptClear;
+	remove: () => ExceptRemove;
 	readonly elements: () => Readonly<HTMLElement[]>;
 }
 
-function DomSQL(): DomSQL {
+function DomSQL(): { select: DomSQL["select"] } {
 	const privateState: {
 		elements: HTMLElement[];
 		limitCount: number;
