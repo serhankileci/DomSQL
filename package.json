@@ -32,13 +32,15 @@
 		"test": "vitest --run",
 		"dev:test": "vitest",
 		"dev:package": "cross-env nodemon --watch ./src/*.ts --exec 'tsc -p .'",
-		"build": "npm run format && npm run lint && tsc -p . && npm test"
+		"build": "npm run format && npm run lint && tsc -p . && npm test",
+		"prepare": "husky install"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^5.51.0",
 		"@typescript-eslint/parser": "^5.51.0",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.33.0",
+		"husky": "^8.0.3",
 		"jsdom": "^22.1.0",
 		"nodemon": "^3.0.1",
 		"prettier": "^2.8.4",
