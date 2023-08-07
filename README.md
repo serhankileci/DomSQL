@@ -26,7 +26,10 @@ const paragraphElem = DomSQL()
     .offset(2)
     .update(el => el.classList.add("bar"));
 
-// list of elements that matched the query
+/*
+    list of elements that matched the query
+    IMPORTANT: limit and offset are only applied when this is called
+*/
 const matchedElems = paragraphElem.elements();
 
 // empty the paragraphElem query's matched elements list
