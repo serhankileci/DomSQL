@@ -12,6 +12,7 @@ Manipulate the DOM with SQL-like syntax. Work in progress, subject to breaking c
 - *Group by* method (?)
 - The *update* method needs an overhaul. Two arguments could be needed separately for callable and non-callable HTMLElement properties; that way, function calls could be done in the first callback argument and configurations could be set in the second object argument. One roadblock I noticed is we we would need to find a way to partially accept HTMLElement properties without breaking functionality, which is what would happen if we use a recursive partial type.
 - Enforce runtime check for specific sequence of method chaining with a clear start method and an optional end method.
+- Additional, better unit tests.
 
 ## Example
 ```js
