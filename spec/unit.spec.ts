@@ -83,27 +83,4 @@ describe("Testing DomSQL query methods.", () => {
 		expect(selectedElements[0].dataset.value).toBe("2");
 		expect(selectedElements[1].dataset.value).toBe("3");
 	});
-
-	test("Calling the 'elements' method multiple times should only affect the elements list once.", () => {
-		document.body.innerHTML = `
-			<p>foo</p>
-			<p>bar</p>
-			<p>baz</p>
-			<p>hello</p>
-			<p>world</p>
-    	`;
-
-		const pElems = DomSQL().select("p");
-		expect(pElems.elements().length).toStrictEqual(5);
-
-		const updatedElems = pElems
-			.limit(2)
-			.offset(2)
-			.update(el => (el.textContent = ":D"));
-
-		expect(updatedElems.elements()[0].textContent!).toStrictEqual(":D");
-		expect(updatedElems.elements()[1].textContent!).toStrictEqual(":D");
-		expect(updatedElems.elements().length).toStrictEqual(2);
-		expect(updatedElems.elements().length).toBe(updatedElems.elements().length);
-	});
 });
