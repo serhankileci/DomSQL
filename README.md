@@ -4,7 +4,7 @@
 ![](https://img.shields.io/github/license/serhankileci/domsql?style=for-the-badge)
 
 # DomSQL
-Manipulate the DOM with SQL-like syntax.
+Manipulate the DOM with SQL-like syntax in JavaScript.
 
 ## Example
 ```js
